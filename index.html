@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinishMyBookAI - Complete Your Unfinished Stories</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 FinishMyBookAI</h1>
+            <p class="tagline">Upload your unfinished story and let AI help you complete it</p>
+        </header>
+
+        <main>
+            <!-- Upload Section -->
+            <div class="section upload-section">
+                <h2>📄 Your Story</h2>
+                <div class="upload-area" id="upload-area">
+                    <div class="upload-icon">📖</div>
+                    <p>Drag & drop your text file here or click to browse</p>
+                    <p class="hint">Supports .txt, .md, .doc files (or paste text below)</p>
+                    <input type="file" id="file-input" accept=".txt,.md,.doc,.docx" hidden>
+                </div>
+                
+                <div class="or-divider">or paste your text</div>
+                
+                <textarea id="story-input" placeholder="Once upon a time, in a land far away...
+
+Paste your unfinished story here. The more context you provide, the better the AI can continue your narrative in your style."></textarea>
+                
+                <div class="word-count">
+                    <span id="word-count">0</span> words
+                </div>
+            </div>
+
+            <!-- Settings Section -->
+            <div class="section settings-section">
+                <h2>⚙️ Generation Settings</h2>
+                
+                <div class="setting-row">
+                    <label for="genre">Genre:</label>
+                    <select id="genre">
+                        <option value="auto">Auto-detect</option>
+                        <option value="fantasy">Fantasy</option>
+                        <option value="scifi">Science Fiction</option>
+                        <option value="romance">Romance</option>
+                        <option value="mystery">Mystery/Thriller</option>
+                        <option value="horror">Horror</option>
+                        <option value="literary">Literary Fiction</option>
+                        <option value="adventure">Adventure</option>
+                        <option value="historical">Historical Fiction</option>
+                    </select>
+                </div>
+                
+                <div class="setting-row">
+                    <label for="tone">Tone:</label>
+                    <select id="tone">
+                        <option value="match">Match original</option>
+                        <option value="serious">Serious</option>
+                        <option value="lighthearted">Lighthearted</option>
+                        <option value="dark">Dark</option>
+                        <option value="humorous">Humorous</option>
+                        <option value="poetic">Poetic</option>
+                    </select>
+                </div>
+                
+                <div class="setting-row">
+                    <label for="length">Generate:</label>
+                    <select id="length">
+                        <option value="paragraph">A paragraph (~100 words)</option>
+                        <option value="section">A section (~500 words)</option>
+                        <option value="chapter" selected>A chapter (~1500 words)</option>
+                        <option value="ending">Complete ending</option>
+                    </select>
+                </div>
+                
+                <div class="setting-row">
+                    <label for="direction">Direction (optional):</label>
+                    <input type="text" id="direction" placeholder="e.g., 'The protagonist should discover the truth about...'">
+                </div>
+                
+                <div class="checkbox-row">
+                    <label>
+                        <input type="checkbox" id="maintain-pov" checked>
+                        Maintain point of view
+                    </label>
+                    <label>
+                        <input type="checkbox" id="match-style" checked>
+                        Match writing style
+                    </label>
+                </div>
+            </div>
+
+            <!-- Generate Button -->
+            <button id="generate-btn" class="generate-btn" disabled>
+                ✨ Continue My Story
+            </button>
+
+            <!-- API Key Section -->
+            <div class="section api-section">
+                <h2>🔑 AI Connection</h2>
+                <p class="api-info">Enter your OpenAI API key to enable story generation. Your key is stored locally and never sent to our servers.</p>
+                <div class="api-input-row">
+                    <input type="password" id="api-key" placeholder="sk-...">
+                    <button id="save-key-btn">Save Key</button>
+                </div>
+                <p class="api-status" id="api-status">No API key saved</p>
+                <p class="hint">Get an API key at <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com</a></p>
+            </div>
+
+            <!-- Output Section -->
+            <div class="section output-section" id="output-section" style="display:none;">
+                <h2>📝 Generated Continuation</h2>
+                <div class="output-controls">
+                    <button id="copy-output" class="small-btn">📋 Copy</button>
+                    <button id="regenerate" class="small-btn">🔄 Regenerate</button>
+                    <button id="continue-more" class="small-btn">➡️ Continue More</button>
+                </div>
+                <div class="output-text" id="output-text"></div>
+                <div class="output-stats">
+                    <span id="output-words">0</span> words generated
+                </div>
+            </div>
+
+            <!-- Tips Section -->
+            <div class="section tips-section">
+                <h2>💡 Tips for Best Results</h2>
+                <div class="tips-grid">
+                    <div class="tip">
+                        <strong>Provide context:</strong> The more of your story you share, the better the AI understands your characters and plot.
+                    </div>
+                    <div class="tip">
+                        <strong>End at a good point:</strong> Stop your text mid-scene or at a decision point for natural continuation.
+                    </div>
+                    <div class="tip">
+                        <strong>Use direction sparingly:</strong> Let the AI surprise you, or guide it when you know where you want to go.
+                    </div>
+                    <div class="tip">
+                        <strong>Iterate:</strong> Generate multiple times and pick your favorite, or combine elements from different generations.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Saved Stories -->
+            <div class="section saved-section">
+                <h2>💾 Saved Projects</h2>
+                <div id="saved-stories" class="saved-stories">
+                    <p class="empty-state">No saved projects yet</p>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Your stories deserve an ending 📖✨</p>
+        </footer>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay" style="display:none;">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p>Writing your story...</p>
+            <p class="loading-tip" id="loading-tip">The AI is analyzing your narrative style...</p>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
